@@ -1,8 +1,38 @@
-.heading {
-      color: #ff0000;
-      font-size: 50px;
-      text-align: center;
-      font-family: 'Dancing Script', cursive;
-      margin: 0;
-      padding: 0;
+body {
+      background-color: #f8f9fa;
+}
+
+.container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-top: 20px;
+}
+
+.profile-img {
+      width: 70%;
+      height: auto;
+      border-radius: 50%;
+      margin-right: 15px;
+      padding: 2% 2% 2% 2%;
+      margin-top: 3%;
+}
+
+
+#usernameLink {
+      color: #343a40;
+      text-decoration: none;
+      transition: underline 0.3s ease;
+}
+
+#usernameLink {
+      padding-right: 5%;
+      color: #343a40;
+      text-decoration: none;
+      transition: underline 0.3s ease;
+}
+
+#usernameLink:hover {
+      text-decoration: underline;
 }
