@@ -57,15 +57,24 @@ const updateGrid = (repos) => {
       reposData.forEach(repo => {
             console.log('topics', repo.name, ' ', repo.topics);
             const repoElement = document.createElement('div');
-            repoElement.className = 'card';
+            repoElement.className = 'container';
+            
+            const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
+            const topicsButtons = repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ');
+
             repoElement.innerHTML = `
-            <div class="card-body">
-                  <h5 class="card-title">${repo.name}</h5>
-                  <p class="card-text">${repo.description || 'No description available'}</p>
-                  <p class="card-text"><strong>Topics:</strong> ${repo.topics.join(', ') || 'No topics available'}</p>
-                  <a href="${repo.html_url}" target="_blank" class="btn btn-primary">View on GitHub</a>
+            <div class="row">
+                  <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">
+                              <a href="${repo.html_url}" target="_blank" class="repo-link">${repo.name}</a>
+                        </h5>
+                        <p class="card-text">${repo.description || 'No description available'}</p>
+                        <p class="card-text"><strong>Topics:</strong> ${topicsButtons}</p>
+                        </div>
+                  </div>
             </div>
-          `;
+            `;
             gridContainer.appendChild(repoElement);
       });
 };
