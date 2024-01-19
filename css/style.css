@@ -19,13 +19,6 @@ body {
       margin-top: 3%;
 }
 
-
-#usernameLink {
-      color: #343a40;
-      text-decoration: none;
-      transition: underline 0.3s ease;
-}
-
 #usernameLink {
       padding-right: 5%;
       color: #343a40;
@@ -35,4 +28,40 @@ body {
 
 #usernameLink:hover {
       text-decoration: underline;
+}
+
+.pagination-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+}
+
+.pagination-item {
+      cursor: pointer;
+      padding: 5px;
+      margin: 0 5px;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+}
+
+.pagination-item.active {
+      background-color: #007bff;
+      color: #fff;
+      border-color: #007bff;
+}
+
+.repo-item {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+}
+
+.repo-item h3 {
+      margin-bottom: 10px;
+}
+
+.repo-item a {
+      color: #007bff;
+      text-decoration: none;
 }
