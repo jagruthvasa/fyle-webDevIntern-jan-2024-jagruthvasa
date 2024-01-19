@@ -70,8 +70,18 @@ body {
       text-decoration: none;
       color: #007bff;
       transition: color 0.3s ease;
-  }
-  
-  .card-title a:hover {
+}
+
+.card-title a:hover {
       color: #0056b3;
-  }
+}
+
+.dropdown-container {
+      overflow: visible !important;
+}
+
+.scrollable-menu {
+      height: auto;
+      max-height: 200px;
+      overflow-x: hidden;
+}

@@ -1,33 +1,48 @@
 const username = 'jagruthvasa';
 
-const userDataUrl = `https://api.github.com/users/${username}`;
-const userReposUrl = `https://api.github.com/users/${username}/repos`;
+var reposPerPage = 10;
+const maxReposPerPage = 100;
+var page = 1;
+const gitUserDataUrl = `https://api.github.com/users`;
 var totalRepos = 0;
-var tagsUrl = '';
 
-fetch(userDataUrl)
-      .then(response => {
-            if (!response.ok) {
-                  throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+const fetchUserData = () => {
 
-            return response.json();
-      })
-      .then(user => {
-            document.getElementById('profileImg').src = user.avatar_url;
-            document.getElementById('bio').textContent = user.bio || 'No bio available';
-            document.getElementById('usernameLink').textContent = user.login;
-            document.getElementById('usernameLink').href = user.html_url;
-            document.getElementById('username').textContent = user.name || 'No name available';
-            document.getElementById('location').textContent = user.location || 'No location available';
-            console.log(user);
-            totalRepos = user.public_repos;
-      })
-      .catch(error => {
-            console.error('Error fetching user data:', error);
-      });
+      if (!username || username === '' || username === null) {
+            username = document.getElementById('usernameInput').value;
+      } 
 
-const fetchData = () => {
+      var userDataUrl = gitUserDataUrl + `/${username}`;
+      console.log('userDataUrl', userDataUrl);
+
+      fetch(userDataUrl)
+            .then(response => {
+                  if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+
+                  return response.json();
+            })
+            .then(user => {
+                  document.getElementById('profileImg').src = user.avatar_url;
+                  document.getElementById('bio').textContent = user.bio || 'No bio available';
+                  document.getElementById('usernameLink').textContent = user.login;
+                  document.getElementById('usernameLink').href = user.html_url;
+                  document.getElementById('username').textContent = user.name || 'No name available';
+                  document.getElementById('location').textContent = user.location || 'No location available';
+                  console.log(user);
+                  totalRepos = user.public_repos;
+                  fetchRepsData();
+            })
+            .catch(error => {
+                  console.error('Error fetching user data:', error);
+            });
+}
+
+const fetchRepsData = () => {
+
+      var userReposUrl = `https://api.github.com/users/${username}/repos` + `?per_page=${reposPerPage}&page=${page}`
+      console.log('userReposUrl', userReposUrl);
       fetch(userReposUrl)
             .then(response => {
                   if (!response.ok) {
@@ -36,9 +51,9 @@ const fetchData = () => {
                   return response.json();
             })
             .then(repos => {
-                  totalRepos = repos.length;
                   console.log(repos);
                   updateGrid(repos);
+                  updatePagePerSize();
             })
             .catch(error => {
                   console.error('Error:', error);
@@ -48,17 +63,12 @@ const fetchData = () => {
 const updateGrid = (repos) => {
       const gridContainer = document.getElementById('repoGrid');
       gridContainer.innerHTML = '';
-      currentPage = 1;
-      itemsPerPage = 10;
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const reposData = repos.slice(startIndex, endIndex);
+      reposData = repos;
 
       reposData.forEach(repo => {
-            console.log('topics', repo.name, ' ', repo.topics);
             const repoElement = document.createElement('div');
             repoElement.className = 'container';
-            
+
             const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
             const topicsButtons = repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ');
 
@@ -79,4 +89,27 @@ const updateGrid = (repos) => {
       });
 };
 
-fetchData();
+const updatePagePerSize = () => {
+      const perPageDropdown = document.getElementById('perPageDropdown');
+
+      const maxPages = totalRepos > maxReposPerPage ? maxReposPerPage : totalRepos;
+
+      for (let i = 1; i <= maxPages; i++) {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.classList.add('dropdown-item');
+            link.href = '#';
+            link.textContent = i;
+
+            link.addEventListener('click', function () {
+                  reposPerPage = i;
+                  console.log(`Selected page: ${i}`);
+                  fetchRepsData();
+            });
+
+            listItem.appendChild(link);
+            perPageDropdown.appendChild(listItem);
+      }
+}
+
+fetchUserData();
