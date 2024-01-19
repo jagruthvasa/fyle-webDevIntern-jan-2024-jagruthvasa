@@ -43,6 +43,7 @@ const fetchReposData = () => {
 
       var userReposUrl = `https://api.github.com/users/${username}/repos` + `?per_page=${reposPerPage}&page=${page}`
       console.log('userReposUrl', userReposUrl);
+
       fetch(userReposUrl)
             .then(response => {
                   if (!response.ok) {
@@ -64,32 +65,38 @@ const fetchReposData = () => {
 const updateGrid = (repos) => {
       const gridContainer = document.getElementById('repoGrid');
       gridContainer.innerHTML = '';
+      const noReposMessage = document.getElementById('noReposMessage');
+      noReposMessage.style.display = 'none';
+
       reposData = repos;
       var index = page === 1 ? 1 : (page - 1) * reposPerPage + 1;
 
-      reposData.forEach(repo => {
-            const repoElement = document.createElement('div');
-            repoElement.className = 'container';
+      if (reposData.length > 0) {
 
-            const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
-            const topicsButtons = repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ');
+            reposData.forEach(repo => {
+                  const repoElement = document.createElement('div');
+                  repoElement.className = 'container';
 
-            repoElement.innerHTML = `
-            <div class="row">
-                  <div class="card">
-                        <div class="card-body">
-                        <h5 class="card-title">
-                              <a href="${repo.html_url}" target="_blank" class="repo-link">${index}. ${repo.name}</a>
-                        </h5>
-                        <p class="card-text">${repo.description || 'No description available'}</p>
-                        <p class="card-text"><strong>Topics:</strong> ${topicsButtons}</p>
+                  const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
+                  const topicsButtons = repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ');
+
+                  repoElement.innerHTML = `
+                  <div class="row">
+                        <div class="card">
+                              <div class="card-body">
+                              <h5 class="card-title">
+                                    <a href="${repo.html_url}" target="_blank" class="repo-link">${index}. ${repo.name}</a>
+                              </h5>
+                              <p class="card-text">${repo.description || 'No description available'}</p>
+                              <p class="card-text"><strong>Topics:</strong> ${topicsButtons}</p>
+                              </div>
                         </div>
                   </div>
-            </div>
-            `;
-            gridContainer.appendChild(repoElement);
-            index++;
-      });
+                  `;
+                  gridContainer.appendChild(repoElement);
+                  index++;
+            });
+      }
 };
 
 const updatePagePerSize = () => {
@@ -151,5 +158,51 @@ const updatePagination = () => {
             paginationContainer.appendChild(createPageLink(i));
       }
 };
+
+const fetchDataBySearch = () => {
+      var searchName = document.getElementById('searchInput').value;
+      console.log('searchName', searchName);
+
+      if (searchName !== '' || searchName !== null || searchName !== undefined) {
+            var userReposUrl = `https://api.github.com/users/${username}/repos`;
+            console.log('userReposUrl', userReposUrl);
+            document.getElementById('pagination').style.display = 'none';
+            document.getElementById('dropdownMenu').style.display = 'none';
+
+            fetch(userReposUrl)
+                  .then(response => {
+                        if (!response.ok) {
+                              throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                  })
+                  .then(repos => {
+
+                        const filteredRepos = repos.filter(repo => repo.name.toLowerCase().includes(searchName.toLowerCase()));
+                        if (filteredRepos.length === 0) {
+                              const gridContainer = document.getElementById('repoGrid');
+                              gridContainer.innerHTML = '';
+
+                              const noReposMessage = document.getElementById('noReposMessage');
+                              noReposMessage.style.display = 'block';
+                              console.log('No repos found');
+                              return;
+                        }
+                        currentRepoSize = filteredRepos.length;
+                        console.log(filteredRepos);
+                        updateGrid(filteredRepos);
+                  })
+                  .catch(error => {
+                        console.error('Error:', error);
+                  });
+      };
+}
+
+const clearSearch = () => {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('pagination').style.display = 'flex';
+      document.getElementById('dropdownMenu').style.display = 'block';
+      fetchReposData();
+}
 
 fetchUserData();

@@ -85,3 +85,15 @@ body {
       max-height: 200px;
       overflow-x: hidden;
 }
+
+.width-30 {
+      width: 30% !important;
+}
+
+.noMessage {
+      text-align: center;
+      font-weight: 150 !important;
+      font-size: 4.25rem !important;
+      color: #555;
+      margin-top: 50px;
+}
