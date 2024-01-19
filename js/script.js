@@ -3,6 +3,7 @@ const username = 'jagruthvasa';
 const userDataUrl = `https://api.github.com/users/${username}`;
 const userReposUrl = `https://api.github.com/users/${username}/repos`;
 var totalRepos = 0;
+var tagsUrl = '';
 
 fetch(userDataUrl)
       .then(response => {
@@ -54,12 +55,16 @@ const updateGrid = (repos) => {
       const reposData = repos.slice(startIndex, endIndex);
 
       reposData.forEach(repo => {
+            console.log('topics', repo.name, ' ', repo.topics);
             const repoElement = document.createElement('div');
-            repoElement.className = 'repo-item';
+            repoElement.className = 'card';
             repoElement.innerHTML = `
-              <h3>${repo.name}</h3>
-              <p>${repo.description || 'No description available'}</p>
-              <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+            <div class="card-body">
+                  <h5 class="card-title">${repo.name}</h5>
+                  <p class="card-text">${repo.description || 'No description available'}</p>
+                  <p class="card-text"><strong>Topics:</strong> ${repo.topics.join(', ') || 'No topics available'}</p>
+                  <a href="${repo.html_url}" target="_blank" class="btn btn-primary">View on GitHub</a>
+            </div>
           `;
             gridContainer.appendChild(repoElement);
       });
