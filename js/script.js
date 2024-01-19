@@ -65,6 +65,7 @@ const updateGrid = (repos) => {
       const gridContainer = document.getElementById('repoGrid');
       gridContainer.innerHTML = '';
       reposData = repos;
+      var index = page === 1 ? 1 : (page - 1) * reposPerPage + 1;
 
       reposData.forEach(repo => {
             const repoElement = document.createElement('div');
@@ -78,7 +79,7 @@ const updateGrid = (repos) => {
                   <div class="card">
                         <div class="card-body">
                         <h5 class="card-title">
-                              <a href="${repo.html_url}" target="_blank" class="repo-link">${repo.name}</a>
+                              <a href="${repo.html_url}" target="_blank" class="repo-link">${index}. ${repo.name}</a>
                         </h5>
                         <p class="card-text">${repo.description || 'No description available'}</p>
                         <p class="card-text"><strong>Topics:</strong> ${topicsButtons}</p>
@@ -87,12 +88,14 @@ const updateGrid = (repos) => {
             </div>
             `;
             gridContainer.appendChild(repoElement);
+            index++;
       });
 };
 
 const updatePagePerSize = () => {
       const perPageDropdown = document.getElementById('perPageDropdown');
       perPageDropdown.innerHTML = '';
+      page = 1;
 
       const maxPages = totalRepos > maxReposPerPage ? maxReposPerPage : totalRepos;
 
