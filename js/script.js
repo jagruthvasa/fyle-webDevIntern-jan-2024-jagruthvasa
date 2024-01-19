@@ -10,7 +10,7 @@ const fetchUserData = () => {
 
       if (!username || username === '' || username === null) {
             username = document.getElementById('usernameInput').value;
-      } 
+      }
 
       var userDataUrl = gitUserDataUrl + `/${username}`;
       console.log('userDataUrl', userDataUrl);
@@ -32,14 +32,14 @@ const fetchUserData = () => {
                   document.getElementById('location').textContent = user.location || 'No location available';
                   console.log(user);
                   totalRepos = user.public_repos;
-                  fetchRepsData();
+                  fetchReposData();
             })
             .catch(error => {
                   console.error('Error fetching user data:', error);
             });
 }
 
-const fetchRepsData = () => {
+const fetchReposData = () => {
 
       var userReposUrl = `https://api.github.com/users/${username}/repos` + `?per_page=${reposPerPage}&page=${page}`
       console.log('userReposUrl', userReposUrl);
@@ -54,6 +54,7 @@ const fetchRepsData = () => {
                   console.log(repos);
                   updateGrid(repos);
                   updatePagePerSize();
+                  updatePagination();
             })
             .catch(error => {
                   console.error('Error:', error);
@@ -91,6 +92,7 @@ const updateGrid = (repos) => {
 
 const updatePagePerSize = () => {
       const perPageDropdown = document.getElementById('perPageDropdown');
+      perPageDropdown.innerHTML = '';
 
       const maxPages = totalRepos > maxReposPerPage ? maxReposPerPage : totalRepos;
 
@@ -104,12 +106,47 @@ const updatePagePerSize = () => {
             link.addEventListener('click', function () {
                   reposPerPage = i;
                   console.log(`Selected page: ${i}`);
-                  fetchRepsData();
+                  fetchReposData();
             });
 
             listItem.appendChild(link);
             perPageDropdown.appendChild(listItem);
       }
 }
+
+const updatePagination = () => {
+      const paginationContainer = document.querySelector('.pagination');
+      paginationContainer.innerHTML = '';
+
+      const totalPages = Math.ceil(totalRepos / reposPerPage);
+      const maxPageLinks = 5;
+
+      let startPage = Math.max(1, page - Math.floor(maxPageLinks / 2));
+      let endPage = Math.min(startPage + maxPageLinks - 1, totalPages);
+
+      if (endPage - startPage + 1 < maxPageLinks) {
+            startPage = Math.max(1, endPage - maxPageLinks + 1);
+      }
+
+      const createPageLink = (pageNumber) => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.classList.add('page-link');
+            link.href = '#';
+            link.textContent = pageNumber;
+
+            link.addEventListener('click', function () {
+                  page = pageNumber;
+                  fetchReposData();
+            });
+
+            listItem.appendChild(link);
+            return listItem;
+      };
+
+      for (let i = startPage; i <= endPage; i++) {
+            paginationContainer.appendChild(createPageLink(i));
+      }
+};
 
 fetchUserData();
