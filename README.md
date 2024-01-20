@@ -47,7 +47,7 @@ To run the project locally, follow these steps:
 
 <!-- ROADMAP -->
 ### Achieved
-- [x] Find all logs with the level set to "error".
+- [x] Pagination has to be server-side
 - [x] By default, show `10` repositories per page
 - [X] User should be able to choose a maximum of `100` repositories per page.
 - [X] When the API calls are in progress, consider showing loaders.
