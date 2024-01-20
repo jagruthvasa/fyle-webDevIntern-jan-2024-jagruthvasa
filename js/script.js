@@ -81,6 +81,8 @@ const updateGrid = (repos) => {
       gridContainer.innerHTML = '';
       const noReposMessage = document.getElementById('noReposMessage');
       noReposMessage.style.display = 'none';
+      const showFilters = document.getElementById('filters');
+      showFilters.style.display = 'block';
 
       reposData = repos;
       var index = page === 1 ? 1 : (page - 1) * reposPerPage + 1;
@@ -111,6 +113,10 @@ const updateGrid = (repos) => {
                   gridContainer.appendChild(repoElement);
                   index++;
             });
+      } else {
+            noReposMessage.style.display = 'block';
+            showFilters.style.display = 'none';
+
       }
       document.getElementById('loader-overlay').style.display = 'none';
 };
