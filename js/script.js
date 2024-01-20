@@ -1,24 +1,30 @@
 var username = '';
 
+// initial page size is 10
 var reposPerPage = 10;
+
 const maxReposPerPage = 100;
+
+// initial page is 1
 var page = 1;
 const gitUserDataUrl = `https://api.github.com/users`;
 var totalRepos = 0;
 
+/*
+* function to fetch user data from github api
+*/
 const fetchUserData = () => {
       document.getElementById('loader-overlay').style.display = 'flex';
 
       username = document.getElementById('username').value;
-      console.log('username', username);
 
+      // validate username
       if (username === '' || username === null || username === undefined) {
             document.getElementById('errorMessage').innerHTML = 'Username cannot be empty';
             return;
       }
 
       var userDataUrl = gitUserDataUrl + `/${username}`;
-      console.log('userDataUrl', userDataUrl);
 
       fetch(userDataUrl)
             .then(response => {
@@ -35,27 +41,32 @@ const fetchUserData = () => {
                   document.getElementById('userInfo').style.display = 'block';
                   document.getElementById('changeUserNav').style.display = 'block';
 
+                  // update user data
                   document.getElementById('profileImg').src = user.avatar_url;
                   document.getElementById('bio').textContent = user.bio || 'No bio available';
                   document.getElementById('usernameLink').textContent = user.login;
                   document.getElementById('usernameLink').href = user.html_url;
                   document.getElementById('loggedUser').textContent = user.name || 'No name available';
                   document.getElementById('location').textContent = user.location || 'No location available';
-                  console.log(user);
                   totalRepos = user.public_repos;
+
+                  // fetch repos data
                   fetchReposData();
             })
             .catch(error => {
                   document.getElementById('loader-overlay').style.display = 'none';
                   document.getElementById('errorMessage').innerHTML = 'User not found';
+                  console.error('Error:', error);
             });
 }
 
+/*
+* function to fetch repos data from github api
+*/
 const fetchReposData = () => {
 
       document.getElementById('loader-overlay').style.display = 'flex';
       var userReposUrl = `https://api.github.com/users/${username}/repos` + `?per_page=${reposPerPage}&page=${page}`
-      console.log('userReposUrl', userReposUrl);
 
       fetch(userReposUrl)
             .then(response => {
@@ -65,7 +76,6 @@ const fetchReposData = () => {
                   return response.json();
             })
             .then(repos => {
-                  console.log(repos);
                   updateGrid(repos);
                   updatePagePerSize();
                   updatePagination();
@@ -76,6 +86,9 @@ const fetchReposData = () => {
             });
 };
 
+/*
+* function to update grid with repos data
+*/
 const updateGrid = (repos) => {
       const gridContainer = document.getElementById('repoGrid');
       gridContainer.innerHTML = '';
@@ -121,6 +134,9 @@ const updateGrid = (repos) => {
       document.getElementById('loader-overlay').style.display = 'none';
 };
 
+/*
+* function to update page per size dropdown
+*/
 const updatePagePerSize = () => {
       const perPageDropdown = document.getElementById('perPageDropdown');
       perPageDropdown.innerHTML = '';
@@ -136,7 +152,6 @@ const updatePagePerSize = () => {
 
             link.addEventListener('click', function () {
                   reposPerPage = i;
-                  console.log(`Selected page: ${i}`);
                   fetchReposData();
             });
 
@@ -145,6 +160,9 @@ const updatePagePerSize = () => {
       }
 }
 
+/*
+* function to update pagination
+*/
 const updatePagination = () => {
       const paginationContainer = document.querySelector('.pagination');
       paginationContainer.innerHTML = '';
@@ -180,16 +198,18 @@ const updatePagination = () => {
       }
 };
 
+/*
+* function to fetch repos data by search
+* created new function search beacuse, search should not be based on pagination
+*/
 const fetchDataBySearch = () => {
       document.getElementById('loader-overlay').style.display = 'flex';
       var searchName = document.getElementById('searchInput').value;
-      console.log('searchName', searchName);
 
       if (searchName === '' || searchName === null || searchName === undefined) {
             document.getElementById('searchErrorMessage').innerHTML = 'Search cannot be empty';
       } else {
             var userReposUrl = `https://api.github.com/users/${username}/repos`;
-            console.log('userReposUrl', userReposUrl);
             document.getElementById('pagination').style.display = 'none';
             document.getElementById('dropdownMenu').style.display = 'none';
             document.getElementById('clear').style.display = 'block';
@@ -211,11 +231,9 @@ const fetchDataBySearch = () => {
 
                               const noReposMessage = document.getElementById('noReposMessage');
                               noReposMessage.style.display = 'block';
-                              console.log('No repos found');
                               return;
                         }
                         currentRepoSize = filteredRepos.length;
-                        console.log(filteredRepos);
                         updateGrid(filteredRepos);
                   })
                   .catch(error => {
@@ -225,6 +243,9 @@ const fetchDataBySearch = () => {
       document.getElementById('loader-overlay').style.display = 'none';
 }
 
+/*
+* function to clear search
+*/
 const clearSearch = () => {
       document.getElementById('searchInput').value = '';
       document.getElementById('pagination').style.display = 'flex';
@@ -234,6 +255,9 @@ const clearSearch = () => {
       fetchReposData();
 }
 
+/*
+* function to change user
+*/
 function changeUser() {
       window.location.reload();
 }
