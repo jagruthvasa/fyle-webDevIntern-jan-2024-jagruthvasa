@@ -1,4 +1,4 @@
-const username = 'jagruthvasa';
+var username = '';
 
 var reposPerPage = 10;
 const maxReposPerPage = 100;
@@ -7,9 +7,14 @@ const gitUserDataUrl = `https://api.github.com/users`;
 var totalRepos = 0;
 
 const fetchUserData = () => {
+      document.getElementById('loader-overlay').style.display = 'flex';
 
-      if (!username || username === '' || username === null) {
-            username = document.getElementById('usernameInput').value;
+      username = document.getElementById('username').value;
+      console.log('username', username);
+
+      if (username === '' || username === null || username === undefined) {
+            document.getElementById('errorMessage').innerHTML = 'Username cannot be empty';
+            return;
       }
 
       var userDataUrl = gitUserDataUrl + `/${username}`;
@@ -24,6 +29,12 @@ const fetchUserData = () => {
                   return response.json();
             })
             .then(user => {
+
+                  document.getElementById('errorMessage').innerHTML = '';
+                  document.getElementById('loginPage').style.display = 'none';
+                  document.getElementById('userInfo').style.display = 'block';
+                  document.getElementById('changeUserNav').style.display = 'block';
+
                   document.getElementById('profileImg').src = user.avatar_url;
                   document.getElementById('bio').textContent = user.bio || 'No bio available';
                   document.getElementById('usernameLink').textContent = user.login;
@@ -35,12 +46,14 @@ const fetchUserData = () => {
                   fetchReposData();
             })
             .catch(error => {
-                  console.error('Error fetching user data:', error);
+                  document.getElementById('loader-overlay').style.display = 'none';
+                  document.getElementById('errorMessage').innerHTML = 'User not found';
             });
 }
 
 const fetchReposData = () => {
 
+      document.getElementById('loader-overlay').style.display = 'flex';
       var userReposUrl = `https://api.github.com/users/${username}/repos` + `?per_page=${reposPerPage}&page=${page}`
       console.log('userReposUrl', userReposUrl);
 
@@ -58,6 +71,7 @@ const fetchReposData = () => {
                   updatePagination();
             })
             .catch(error => {
+                  document.getElementById('loader-overlay').style.display = 'none';
                   console.error('Error:', error);
             });
 };
@@ -97,6 +111,7 @@ const updateGrid = (repos) => {
                   index++;
             });
       }
+      document.getElementById('loader-overlay').style.display = 'none';
 };
 
 const updatePagePerSize = () => {
@@ -160,14 +175,19 @@ const updatePagination = () => {
 };
 
 const fetchDataBySearch = () => {
+      document.getElementById('loader-overlay').style.display = 'flex';
       var searchName = document.getElementById('searchInput').value;
       console.log('searchName', searchName);
 
-      if (searchName !== '' || searchName !== null || searchName !== undefined) {
+      if (searchName === '' || searchName === null || searchName === undefined) {
+            document.getElementById('searchErrorMessage').innerHTML = 'Search cannot be empty';
+      } else {
             var userReposUrl = `https://api.github.com/users/${username}/repos`;
             console.log('userReposUrl', userReposUrl);
             document.getElementById('pagination').style.display = 'none';
             document.getElementById('dropdownMenu').style.display = 'none';
+            document.getElementById('clear').style.display = 'block';
+            document.getElementById('searchErrorMessage').innerHTML = '';
 
             fetch(userReposUrl)
                   .then(response => {
@@ -195,14 +215,21 @@ const fetchDataBySearch = () => {
                   .catch(error => {
                         console.error('Error:', error);
                   });
-      };
+      }
+      document.getElementById('loader-overlay').style.display = 'none';
 }
 
 const clearSearch = () => {
       document.getElementById('searchInput').value = '';
       document.getElementById('pagination').style.display = 'flex';
       document.getElementById('dropdownMenu').style.display = 'block';
+      document.getElementById('clear').style.display = 'none';
+      document.getElementById('searchErrorMessage').innerHTML = '';
       fetchReposData();
 }
 
-fetchUserData();
+function changeUser() {
+      window.location.reload();
+}
+
+// fetchUserData();
