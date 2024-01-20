@@ -14,9 +14,9 @@ This project allows users to retrieve and display information about a GitHub use
 - Responsive design for a seamless user experience on various devices.
 
 
-### Live Demo
+### Hosted URL
 
-Check out the live demo [here](https://jagruthvasa.github.io/fyle-webDevIntern-jan-2024-jagruthvasa/).
+Visit the hosted site [here](https://jagruthvasa.github.io/fyle-webDevIntern-jan-2024-jagruthvasa/).
 
 
 ### Technologies Used
