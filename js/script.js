@@ -39,7 +39,7 @@ const fetchUserData = () => {
                   document.getElementById('bio').textContent = user.bio || 'No bio available';
                   document.getElementById('usernameLink').textContent = user.login;
                   document.getElementById('usernameLink').href = user.html_url;
-                  document.getElementById('username').textContent = user.name || 'No name available';
+                  document.getElementById('loggedUser').textContent = user.name || 'No name available';
                   document.getElementById('location').textContent = user.location || 'No location available';
                   console.log(user);
                   totalRepos = user.public_repos;
@@ -92,7 +92,8 @@ const updateGrid = (repos) => {
                   repoElement.className = 'container';
 
                   const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
-                  const topicsButtons = repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ');
+                  const topicsButtons = repo.topics.length > 0 ? repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ')
+                        : 'No topics available';
 
                   repoElement.innerHTML = `
                   <div class="row">
@@ -117,7 +118,6 @@ const updateGrid = (repos) => {
 const updatePagePerSize = () => {
       const perPageDropdown = document.getElementById('perPageDropdown');
       perPageDropdown.innerHTML = '';
-      page = 1;
 
       const maxPages = totalRepos > maxReposPerPage ? maxReposPerPage : totalRepos;
 
