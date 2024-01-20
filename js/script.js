@@ -21,6 +21,7 @@ const fetchUserData = () => {
       // validate username
       if (username === '' || username === null || username === undefined) {
             document.getElementById('errorMessage').innerHTML = 'Username cannot be empty';
+            document.getElementById('loader-overlay').style.display = 'none';
             return;
       }
 
