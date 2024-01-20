@@ -2,7 +2,7 @@
 
 ## GitHub User Info
 
- <img src="home.png" alt="Project Main Page">
+ <img src="home.png" alt="Project Main Page" id="readme-top">
 
 This project allows users to retrieve and display information about a GitHub user, including their repositories. It provides a user-friendly interface for exploring a user's profile and repositories.
 
