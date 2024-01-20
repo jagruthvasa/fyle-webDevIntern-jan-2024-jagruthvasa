@@ -107,8 +107,9 @@ const updateGrid = (repos) => {
                   repoElement.className = 'container';
 
                   const colors = ['secondary', 'success', 'danger', 'warning', 'info'];
-                  const topicsButtons = repo.topics.length > 0 ? repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index]} btn-sm">${topic}</button>`).join(' ')
-                        : 'No topics available';
+                  const topicsButtons = repo.topics.length > 0
+                              ? repo.topics.map((topic, index) => `<button type="button" class="btn btn-${colors[index % colors.length]} btn-sm">${topic}</button>`).join(' ')
+                              : 'No topics available';
 
                   repoElement.innerHTML = `
                   <div class="row">
