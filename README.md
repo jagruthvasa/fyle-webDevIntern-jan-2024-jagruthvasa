@@ -6,7 +6,6 @@
 
 This project allows users to retrieve and display information about a GitHub user, including their repositories. It provides a user-friendly interface for exploring a user's profile and repositories.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Features
 
@@ -14,13 +13,11 @@ This project allows users to retrieve and display information about a GitHub use
 - Display user repositories with pagination and search functionality.
 - Responsive design for a seamless user experience on various devices.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Live Demo
 
 Check out the live demo [here](https://jagruthvasa.github.io/fyle-webDevIntern-jan-2024-jagruthvasa/).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Technologies Used
 
