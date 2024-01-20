@@ -237,5 +237,3 @@ const clearSearch = () => {
 function changeUser() {
       window.location.reload();
 }
-
-// fetchUserData();
